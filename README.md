@@ -21,6 +21,90 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+ Autenticação (Sistema de Login) com Token JWT
+
+{% embed url="https://www.youtube.com/watch?v=3z6Cs_PtYc0" %}
+
+**Link do repositório no GitHub:** [https://github.com/FabricaDeSinapse/nestjs-auth](https://github.com/FabricaDeSinapse/nestjs-auth)
+
+**Link do Miro:** [https://miro.com/app/board/uXjVOXehwN4=/](https://miro.com/app/board/uXjVOXehwN4=/)
+
+## Iniciando um projeto NestJS
+
+Antes de iniciar, certifique-se de que você possui um projeto NestJS criado e que a CLI do NestJS está instalada no seu computador.
+
+## Prisma
+
+### Instalar o prisma
+
+```bash
+npm install -D prisma
+```
+
+### Inicializar o prisma
+
+```bash
+npx prisma init
+```
+
+### `prisma/schema.prisma`
+
+```java
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email    String @unique
+  password String
+
+  name String
+}
+```
+
+## Arquivo `.env`
+
+```bash
+# Configuration
+
+JWT_SECRET=""
+
+# Database
+
+DATABASE_URL=""
+```
+
+### Arquivo `.env` preenchido
+
+```bash
+# Configuration
+
+JWT_SECRET="texto aleatório para proteger sua aplicação"
+
+# Database
+
+DATABASE_URL="file:./sqlite.db"
+```
+
+## Migrar o banco
+
+```bash
+npx prisma migrate dev --name init
+```
+
+Esse comando deverá instalar a dependência `@prisma/client` no projeto.
+
+
 
 ## Description
 
