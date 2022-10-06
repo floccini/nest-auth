@@ -14,8 +14,8 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard) //Só entra no mecanismo de login caso o guardião valide com sua estratégia se a pessoa tem permissão ou não.
   login() {
-    // return this.authService.login();
+    return '';
   }
 }
