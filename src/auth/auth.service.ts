@@ -1,38 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
-import { User } from 'src/user/entities/user.entity';
-import { UserPayload } from './models/UserPayload';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { UnauthorizedError } from './errors/unauthorized.error';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
+import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
-  login(user: User): UserToken {
-    // Transforma o user em um JWT token
+  async login(user: User): Promise<UserToken> {
     const payload: UserPayload = {
       sub: user.id,
       email: user.email,
       name: user.name,
     };
 
-    const jwtToken = this.jwtService.sign(payload);
-
     return {
-      acess_token: jwtToken,
+      access_token: this.jwtService.sign(payload),
     };
   }
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findByEmail(email);
 
     if (user) {
-      // Checar se a senha informada corresponde a hash que está no banco
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
@@ -42,7 +39,9 @@ export class AuthService {
         };
       }
     }
-    // Se chegar aqui, significa que não encontrou um user e/ou a senha não corresponde
-    throw new Error('Email address or password provided is incorret.');
+
+    throw new UnauthorizedError(
+      'Email address or password provided is incorrect.',
+    );
   }
 }
